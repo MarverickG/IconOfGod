@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Account – Icon of God</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Agency FB', sans-serif;
+      background-color: #fff;
+      color: #111;
+    }
+
+    .sticky-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 80px;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+    }
+
+    .sticky-bar img {
+      width: 180px;
+    }
+
+    .account-container {
+      max-width: 900px;
+      margin: 120px auto 2rem;
+      padding: 2rem;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .section {
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 0.5rem;
+    }
+
+    .section-content {
+      font-size: 1rem;
+      color: #333;
+    }
+
+    .btn {
+      background-color: #111;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      margin-top: 1rem;
+      margin-right: 0.5rem;
+      
+    }
+
+    .btn:hover {
+      background-color: #333;
+    }
+    a.btn {
+      display: inline-block;
+      text-decoration: none;
+      background-color: #111;
+      color: white;
+      padding: 0.5rem 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      margin-top: 1rem;
+      margin-right: 0.5rem;
+      border: none;
+      border-radius: 4px;
+      text-align: center;
+  }
+
+    a.btn:hover {
+    background-color: #333;
+  }
+  </style>
+</head>
+<body>
+  <div class="sticky-bar">
+    <a href="Index12.html">
+      <img src="logo.png" alt="Icon of God Logo" />
+    </a>
+  </div>
+
+  <div class="account-container">
+    <h2 id="welcome-heading">Welcome, [User Name]</h2>
+
+    <div class="section">
+      <div class="section-title">Email</div>
+      <div class="section-content" id="user-email">user@example.com</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Saved Items</div>
+      <div class="section-content">No saved items yet.</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Order History</div>
+      <div class="section-content">You haven’t made any purchases yet.</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Account Settings</div>
+      <div class="section-content">
+        <a href="Account_Edit.html" class="btn">Edit Profile</a>
+        <a href="Account_ChangePassword.html" class="btn">Change Password</a>
+        <a href="Index12.html" class="btn">Home</a>
+        <a href="#" class="btn" onclick="logout()">Log Out</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem("iog_user"));
+  
+    if (!user) {
+      window.location.href = "Login.html"; // Change if needed
+    } else {
+      document.getElementById("welcome-heading").textContent = `Welcome, ${user.name || "User"}`;
+      document.getElementById("user-email").textContent = user.email;
+    }
+  
+    function logout() {
+      const confirmLogout = confirm("Are you sure you want to log out?");
+      if (confirmLogout) {
+        localStorage.removeItem("iog_user");
+        window.location.href = "index12.html";
+      }
+    }
+  
+    window.addEventListener("scroll", function () {
+      const scrollY = window.scrollY;
+      const stickyBar = document.querySelector(".sticky-bar");
+  
+      if (scrollY > 100) {
+        stickyBar.classList.add("active");
+      } else {
+        stickyBar.classList.remove("active");
+      }
+    });
+  </script>
+</body>
+</html>

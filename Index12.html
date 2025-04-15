@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Icon of God</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Icon of God – Faith-driven fashion inspired by Jesus, Angels, and divine purpose.">
+  <meta name="keywords" content="Christian fashion, Icon of God, Revelation 5:5, faith clothing, Jesus, Angels">
+  <meta name="author" content="Icon of God">
+
+  <link rel="icon" href="web_favicon.png" type="image/png" />
+
+  <style>
+    @font-face {
+      font-family: 'Agency FB';
+      src: local('Agency FB'), local('AgencyFB');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      font-family: 'Agency FB', sans-serif;
+      background-color: #fff;
+      color: #111;
+    }
+
+    header {
+      height: 100vh;
+      background: url('hero-image.jpg') center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 2rem;
+      position: relative;
+    }
+    header img.logo {
+      width: 300px;
+      max-width: 90%;
+      margin-bottom: 1rem;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    header p {
+      font-size: 1.2rem;
+      font-style: italic;
+      margin-bottom: 2rem;
+    }
+    .btn {
+      padding: 0.8rem 1.5rem;
+      margin: 0.5rem;
+      border: none;
+      background-color: #111;
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .sticky-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 80px;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(-100%);
+      transition: transform 0.6s ease, opacity 0.6s ease;
+    }
+    .sticky-bar.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .sticky-bar img {
+      width: 200px;
+      transition: opacity 0.5s ease;
+    }
+
+    section {
+      padding: 4rem 2rem;
+      max-width: 800px;
+      margin: auto;
+    }
+    .section-title {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    .section-text {
+      font-size: 1rem;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    .cta {
+      background-color: #f5f5f5;
+      text-align: center;
+      padding: 3rem 2rem;
+      margin-top: 100px;
+    }
+
+    .products {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .product {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .product-images {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      height: auto;
+      aspect-ratio: 3/4;
+    }
+
+    .product-images img.front,
+    .product-images img.back {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: opacity 0.4s ease-in-out;
+    }
+
+    .product-images img.back {
+      opacity: 0;
+    }
+
+    .product-images:hover img.front {
+      opacity: 0;
+    }
+
+    .product-images:hover img.back {
+      opacity: 1;
+    }
+
+    .product-content {
+      margin-top: 30px;
+    }
+
+    .product-title {
+      font-size: 22px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    .product-description {
+      font-size: 16px;
+      margin: 15px 0;
+      color: #555;
+    }
+
+    .btn {
+      background-color: black;
+      color: white;
+      padding: 12px 24px;
+      font-size: 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .btn:hover {
+      background-color: #333;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: #555;
+    }
+
+    .lightbox {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.95);
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      padding: 2rem;
+      box-sizing: border-box;
+    }
+    .lightbox.active {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+    }
+    .lightbox img {
+      max-width: 100%;
+      max-height: 60vh;
+      margin-bottom: 1.5rem;
+    }
+    .lightbox .details {
+      max-width: 500px;
+    }
+    .lightbox .details h3 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+    .lightbox .details p {
+      font-size: 1rem;
+      color: #ccc;
+      margin-bottom: 1.5rem;
+    }
+    .lightbox .close-btn {
+      margin-top: 1rem;
+      cursor: pointer;
+      color: #aaa;
+      font-size: 0.9rem;
+      text-decoration: underline;
+    }
+
+    .email-capture {
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    @keyframes fadeInSlow {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .reveal {
+      opacity: 1;
+    }
+
+    .reveal.active {
+      animation: fadeInSlow 1.5s ease-in-out forwards;
+    }
+  </style>
+</head>
+<body>
+  <div class="sticky-bar">
+    <img src="logo.png" alt="Sticky Logo" />
+    <a id="authLink" style="position: absolute; right: 2rem; font-size: 0.9rem; font-weight: bold; text-transform: uppercase; color: #111; text-decoration: none;"></a>
+
+  </div>
+
+  <header>
+    <img src="logo.png" alt="Header Logo" class="logo" />
+    <p>More than fashion — it's a message.</p>
+    <button class="btn" onclick="window.location.href='Drop01.html'">Shop Drop 01</button>
+    <button class="btn">Join the Waitlist</button>
+  </header>
+
+  <section>
+    <h2 class="section-title">We are not gods. We are messengers.</h2>
+    <p class="section-text">
+      Icon of God is a visual exploration of identity, divine craftsmanship, and contrast.  
+      This is clothing meant to be seen from afar, yet understood only up close.  
+      A statement. A silence. A reminder that you were made with intention.
+    </p>
+  </section>
+
+  <section class="products">
+    <h2 class="section-title">Drop 01 — Preview</h2>
+    <div class="product reveal">
+      <div class="product-images" onclick="window.location.href='drop01.html'" style="cursor: pointer;">
+  <img src="IOG_Jersey.png" alt="Front View" class="front product-img">
+  <img src="The_Messenger.png" alt="Back View" class="back product-img">
+</div>
+      <div class="product-content">
+        <div class="product-title">"The Messenger" Jersey</div>
+        <div class="product-description">A visual echo of heaven.</div>
+        <button class="btn">Notify Me</button>
+      </div>
+    </div>
+  </section>
+
+  <div style="height: 100px;"></div>
+
+  <section class="cta">
+    <h2 class="section-title">You are the canvas.</h2>
+    <p class="section-text">Join the movement. Be the message.</p>
+    <button class="btn" onclick="window.location.href='https://your-signup-form.com'">Sign Up</button>
+  </section>
+
+
+  <div class="email-capture">
+    <h2>Stay Connected</h2>
+    <p>Be the first to know about new drops and divine inspiration.</p>
+    <input type="email" placeholder="Enter your email" style="padding: 0.5rem; width: 250px;">
+    <button style="padding: 0.5rem 1rem; margin-left: 0.5rem;">Subscribe</button>
+  </div>
+
+  <footer>
+    Icon of God &copy; 2025 &nbsp;|&nbsp; Instagram &nbsp;|&nbsp; Email &nbsp;|&nbsp; Made with purpose
+  </footer>
+
+  <script>
+    window.addEventListener('scroll', function() {
+      const scrollY = window.scrollY;
+      const headerLogo = document.querySelector('header img.logo');
+      const stickyBar = document.querySelector('.sticky-bar');
+  
+      let fadeStart = 0, fadeEnd = 150;
+      let logoOpacity = 1 - (scrollY - fadeStart) / (fadeEnd - fadeStart);
+      if (logoOpacity < 0) logoOpacity = 0;
+      if (headerLogo) {
+        headerLogo.style.opacity = logoOpacity;
+        headerLogo.style.transform = `scale(${1 - 0.15 * (1 - logoOpacity)})`;
+      }
+  
+      if (scrollY > 100) {
+        stickyBar.classList.add('active');
+      } else {
+        stickyBar.classList.remove('active');
+      }
+    });
+  
+    const reveals = document.querySelectorAll(".reveal");
+    function revealOnScroll() {
+      const windowHeight = window.innerHeight;
+      reveals.forEach(el => {
+        const elementTop = el.getBoundingClientRect().top;
+        if (elementTop < windowHeight - 100) {
+          el.classList.add("active");
+        }
+      });
+    }
+    window.addEventListener("load", () => {
+    const user = JSON.parse(localStorage.getItem("iog_user"));
+    const authLink = document.getElementById("authLink");
+
+    if (authLink) {
+      if (user && user.name) {
+        authLink.textContent = "My Account";
+        authLink.href = "Account_Dashboard.html";
+      } else {
+        authLink.textContent = "Sign In";
+        authLink.href = "Login.html"; // Changed from Signup.html
+      }
+    }
+
+    // Optional: support for a separate sign-in button (if used elsewhere)
+    const signInBtn = document.getElementById("signin-btn");
+    if (signInBtn) {
+      signInBtn.addEventListener("click", () => {
+        const userData = JSON.parse(localStorage.getItem("iog_user"));
+        if (!userData) {
+          window.location.href = "Login.html";
+        } else if (userData.email && userData.name) {
+          window.location.href = "Account_Dashboard.html";
+        }
+      });
+    }
+  });
+</script>
+</body>
+</html>
