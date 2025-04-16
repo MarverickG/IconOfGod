@@ -14,7 +14,7 @@ router.post('/signup', async (req, res) => {
     return res.status(409).json({ message: 'Email already in use.' });
   }
 
-  const isStrongPassword = /^(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/.test(password);
+  const isStrongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(newPassword);
   if (!isStrongPassword) {
     return res.status(400).json({
       message: 'Password must be at least 8 characters long and include a number and a special character.'
@@ -76,7 +76,7 @@ router.post('/change-password', async (req, res) => {
     return res.status(401).json({ message: 'Current password is incorrect.' });
   }
 
-  const isStrongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/.test(newPassword);
+  const isStrongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(newPassword);
 if (!isStrongPassword) {
   return res.status(400).json({
     message: 'Password must be at least 8 characters long, include uppercase and lowercase letters, a number, and a special character.'
@@ -120,7 +120,7 @@ router.post('/reset-password', async (req, res) => {
     return res.status(400).json({ message: 'Invalid or expired token.' });
   }
 
-  const isStrongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/.test(newPassword);
+  const isStrongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(newPassword);
   if (!isStrongPassword) {
     return res.status(400).json({
       message: 'Password must include a number and a special character and be at least 8 characters long.'
