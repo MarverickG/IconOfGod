@@ -14,7 +14,7 @@ router.post('/signup', async (req, res) => {
     return res.status(409).json({ message: 'Email already in use.' });
   }
 
-  const isStrongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(newPassword);
+  const isStrongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(password);
   if (!isStrongPassword) {
     return res.status(400).json({
       message: 'Password must be at least 8 characters long and include a number and a special character.'
