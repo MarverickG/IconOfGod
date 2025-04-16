@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const router = express.Router();
 const users = require('../data/users');
+const sendEmail = require('../utils/sendEmail');
 
 // Sign up
 router.post('/signup', async (req, res) => {
@@ -23,10 +24,20 @@ router.post('/signup', async (req, res) => {
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = { name, email, password: hashedPassword };
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+    const newUser = { name, email, password: hashedPassword, verified: false, verificationToken };
     users.push(newUser);
-    res.status(201).json({ message: 'User created successfully', user: { name, email } });
+
+    // Send verification email
+    const verifyLink = `https://iconofgod-backend.onrender.com/api/verify?token=${verificationToken}`;
+    await sendEmail(email, 'Verify Your Email', `Click to verify your email: ${verifyLink}`);
+
+    res.status(201).json({
+      message: 'User created successfully. Verification email sent.',
+      user: { name, email }
+    });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Error creating user.' });
   }
 });
