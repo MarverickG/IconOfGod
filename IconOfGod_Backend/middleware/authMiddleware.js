@@ -1,7 +1,13 @@
 const jwt = require('jsonwebtoken');
 
 function verifyToken(req, res, next) {
-  const token = req.cookies.token;
+  let token = req.cookies.token;
+
+  // Also check for Bearer token in Authorization header
+  if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+
   if (!token) {
     return res.status(401).json({ message: 'Not authenticated' });
   }
@@ -14,5 +20,3 @@ function verifyToken(req, res, next) {
     return res.status(403).json({ message: 'Token invalid or expired' });
   }
 }
-
-module.exports = verifyToken;
