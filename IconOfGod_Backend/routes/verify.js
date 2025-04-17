@@ -1,22 +1,29 @@
 const express = require('express');
 const router = express.Router();
-const sendEmail = require('../utils/sendEmail');
+const User = require('../models/User');
 
-router.post('/send-verification', async (req, res) => {
-  const { email } = req.body;
+router.get('/', async (req, res) => {
+  const token = req.query.token;
+
+  if (!token) {
+    return res.status(400).send('Missing token');
+  }
 
   try {
-    const verificationLink = `https://iconofgod-backend.onrender.com/api/verify`; // You can make this a real token later
+    const user = await User.findOne({ verificationToken: token });
 
-    await sendEmail(
-      email,
-      'Verify your email',
-      `<p>Click <a href="${verificationLink}">here</a> to verify your email.</p>`
-    );
+    if (!user) {
+      return res.status(400).send('Invalid or expired token');
+    }
 
-    res.status(200).json({ message: 'Verification email sent.' });
+    user.verified = true;
+    user.verificationToken = undefined;
+    await user.save();
+
+    return res.status(200).send('✅ Email verified successfully. You can now log in!');
   } catch (err) {
-    res.status(500).json({ error: 'Failed to send email.' });
+    console.error(err);
+    return res.status(500).send('Server error');
   }
 });
 

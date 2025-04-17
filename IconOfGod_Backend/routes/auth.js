@@ -211,5 +211,29 @@ router.post('/reset-password', async (req, res) => {
 router.get('/dashboard', verifyToken, (req, res) => {
   res.json({ message: `Welcome ${req.user.name}` });
 });
+// Verify route
+router.get('/verify', async (req, res) => {
+  const token = req.query.token;
+  if (!token) {
+    return res.status(400).send('Missing token');
+  }
+
+  try {
+    const user = await User.findOne({ verificationToken: token });
+
+    if (!user) {
+      return res.status(400).send('Invalid or expired token');
+    }
+
+    user.verified = true;
+    user.verificationToken = undefined;
+    await user.save();
+
+    return res.status(200).send('Email successfully verified!');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+});
 
 module.exports = router;
