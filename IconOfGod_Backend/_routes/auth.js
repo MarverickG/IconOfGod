@@ -6,6 +6,8 @@ const router = express.Router();
 const sendEmail = require('../utils/sendEmail');
 const verifyToken = require('../middleware/authMiddleware');
 const User = require('../models/User');
+console.log("Current working directory:", __dirname);
+
 
 router.post('/logout', (req, res) => {
   res.clearCookie('token').json({ message: 'Logged out successfully' });
