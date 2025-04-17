@@ -15,11 +15,6 @@ router.post('/logout', (req, res) => {
   res.clearCookie('token').json({ message: 'Logged out successfully' });
 });
 
-router.post('/logout', (req, res) => {
-  res.clearCookie('token').json({ message: 'Logged out successfully' });
-});
-
-
 // Sign up
 router.post('/signup', async (req, res) => {
   const { name, email, password } = req.body;
@@ -69,6 +64,21 @@ router.post('/login', async (req, res) => {
     res.json({ message: 'Login successful', user: { name: user.name, email: user.email } });
 
     const jwt = require('jsonwebtoken');
+
+    const token = jwt.sign(
+      { id: user._id },              // payload (can include more if needed)
+      process.env.JWT_SECRET,       // secret key (make sure it's in your .env)
+      { expiresIn: '1d' }           // optional: token expires in 1 day
+    );
+    
+    res.json({
+      message: 'Login successful',
+      user: {
+        name: user.name,
+        email: user.email
+      },
+      token: token                  // ✅ send token back to client
+    });
 
 // After successful login
 const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
@@ -127,8 +137,6 @@ if (!isStrongPassword) {
 
   const hashedNewPassword = await bcrypt.hash(newPassword, 10);
   user.password = hashedNewPassword;
-
-  const verifyToken = require('../middleware/authMiddleware');
 
 router.get('/dashboard', verifyToken, (req, res) => {
   res.json({ message: `Welcome ${req.user.name}` });
