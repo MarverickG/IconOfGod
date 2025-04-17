@@ -61,38 +61,29 @@ router.post('/login', async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
-    res.json({ message: 'Login successful', user: { name: user.name, email: user.email } });
-
     const jwt = require('jsonwebtoken');
 
     const token = jwt.sign(
-      { id: user._id },              // payload (can include more if needed)
-      process.env.JWT_SECRET,       // secret key (make sure it's in your .env)
-      { expiresIn: '1d' }           // optional: token expires in 1 day
+      { id: user._id, name: user.name }, 
+      process.env.JWT_SECRET, 
+      { expiresIn: '1d' }
     );
-    
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'Lax',
+      maxAge: 24 * 60 * 60 * 1000 // 1 day
+    });
+
     res.json({
       message: 'Login successful',
       user: {
         name: user.name,
         email: user.email
       },
-      token: token                  // ✅ send token back to client
+      token // include token in response if you want it client-side too
     });
-
-// After successful login
-const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-  expiresIn: '1d',
-});
-
-// Send as HTTP-only cookie
-res.cookie('token', token, {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'Lax',
-  maxAge: 24 * 60 * 60 * 1000, // 1 day
-})
-.json({ message: 'Login successful', user });
   } catch (err) {
     res.status(500).json({ message: 'Error during login.' });
   }
@@ -138,9 +129,6 @@ if (!isStrongPassword) {
   const hashedNewPassword = await bcrypt.hash(newPassword, 10);
   user.password = hashedNewPassword;
 
-router.get('/dashboard', verifyToken, (req, res) => {
-  res.json({ message: `Welcome ${req.user.name}` });
-});
 
   res.json({ message: 'Password updated successfully' });
 });
@@ -188,16 +176,13 @@ router.post('/reset-password', async (req, res) => {
     delete user.resetToken;
     delete user.tokenExpiry;
 
-    const verifyToken = require('../middleware/authMiddleware');
-
-router.get('/dashboard', verifyToken, (req, res) => {
-  res.json({ message: `Welcome ${req.user.name}` });
-});
-
     res.json({ message: 'Password has been reset successfully.' });
   } catch (err) {
     res.status(500).json({ message: 'Error resetting password.' });
   }
+});
+router.get('/dashboard', verifyToken, (req, res) => {
+  res.json({ message: `Welcome ${req.user.name}` });
 });
 
 module.exports = router;
