@@ -5,6 +5,20 @@ const crypto = require('crypto');
 const router = express.Router();
 const users = require('../data/users');
 const sendEmail = require('../utils/sendEmail');
+const verifyToken = require('../middleware/authMiddleware');
+
+router.post('/update-profile', verifyToken, (req, res) => {
+  // user is authenticated
+});
+
+router.post('/logout', (req, res) => {
+  res.clearCookie('token').json({ message: 'Logged out successfully' });
+});
+
+router.post('/logout', (req, res) => {
+  res.clearCookie('token').json({ message: 'Logged out successfully' });
+});
+
 
 // Sign up
 router.post('/signup', async (req, res) => {
@@ -53,6 +67,22 @@ router.post('/login', async (req, res) => {
     if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
     res.json({ message: 'Login successful', user: { name: user.name, email: user.email } });
+
+    const jwt = require('jsonwebtoken');
+
+// After successful login
+const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+  expiresIn: '1d',
+});
+
+// Send as HTTP-only cookie
+res.cookie('token', token, {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'Lax',
+  maxAge: 24 * 60 * 60 * 1000, // 1 day
+})
+.json({ message: 'Login successful', user });
   } catch (err) {
     res.status(500).json({ message: 'Error during login.' });
   }
@@ -97,6 +127,12 @@ if (!isStrongPassword) {
 
   const hashedNewPassword = await bcrypt.hash(newPassword, 10);
   user.password = hashedNewPassword;
+
+  const verifyToken = require('../middleware/authMiddleware');
+
+router.get('/dashboard', verifyToken, (req, res) => {
+  res.json({ message: `Welcome ${req.user.name}` });
+});
 
   res.json({ message: 'Password updated successfully' });
 });
@@ -143,6 +179,12 @@ router.post('/reset-password', async (req, res) => {
     user.password = hashed;
     delete user.resetToken;
     delete user.tokenExpiry;
+
+    const verifyToken = require('../middleware/authMiddleware');
+
+router.get('/dashboard', verifyToken, (req, res) => {
+  res.json({ message: `Welcome ${req.user.name}` });
+});
 
     res.json({ message: 'Password has been reset successfully.' });
   } catch (err) {

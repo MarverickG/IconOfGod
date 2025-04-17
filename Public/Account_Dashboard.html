@@ -105,7 +105,7 @@
   </div>
 
   <div class="account-container">
-    <h2 id="welcome-heading">Welcome, [User Name]</h2>
+    <h2 id="welcome-heading"></h2>
 
     <div class="section">
       <div class="section-title">Email</div>
@@ -134,22 +134,39 @@
   </div>
 
   <script>
-    const user = JSON.parse(localStorage.getItem("iog_user"));
-  
-    if (!user) {
-      window.location.href = "Login.html"; // Change if needed
-    } else {
-      document.getElementById("welcome-heading").textContent = `Welcome, ${user.name || "User"}`;
-      document.getElementById("user-email").textContent = user.email;
+    fetch('https://iconofgod-backend.onrender.com/api/auth/dashboard', {
+    method: 'GET',
+    credentials: 'include'
+  })
+  .then(res => {
+    if (!res.ok) {
+      // Redirect to login if not authenticated
+      window.location.href = 'Login.html';
     }
+    return res.json();
+  })
+  .then(data => {
+    // Example: Show welcome message
+    document.getElementById('welcome-heading').textContent = `Welcome, ${data.name}`;
+  })
+  .catch(err => {
+    console.error('Auth check failed:', err);
+    window.location.href = 'Login.html';
+  });
   
     function logout() {
       const confirmLogout = confirm("Are you sure you want to log out?");
       if (confirmLogout) {
-        localStorage.removeItem("iog_user");
-        window.location.href = "index12.html";
-      }
-    }
+    fetch("https://iconofgod-backend.onrender.com/api/auth/logout", {
+      method: "POST",
+      credentials: "include",
+    }).then(() => {
+      window.location.href = "Index12.html";
+    }).catch(() => {
+      alert("Failed to log out.");
+    });
+  }
+}
   
     window.addEventListener("scroll", function () {
       const scrollY = window.scrollY;

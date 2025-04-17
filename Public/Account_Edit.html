@@ -82,41 +82,50 @@
   </div>
 
   <script>
-    const user = JSON.parse(localStorage.getItem("iog_user"));
-    if (!user) window.location.href = "Account_Login.html";
-
-    // Wait for DOM to load
-    window.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("edit-name").value = user.name;
-      document.getElementById("edit-email").value = user.email;
-
-      document.getElementById("edit-form").addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        const name = document.getElementById("edit-name").value.trim();
-        const email = document.getElementById("edit-email").value.trim();
-
-        try {
-          const res = await fetch("http://localhost:5000/api/auth/update-profile", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ currentEmail: user.email, name, email }),
-          });
-
-          const data = await res.json();
-
-          if (res.ok) {
-            alert("Profile updated!");
-            localStorage.setItem("iog_user", JSON.stringify(data.user));
-            window.location.href = "Account_Dashboard.html";
-          } else {
-            alert(data.message || "Failed to update.");
-          }
-        } catch (err) {
-          alert("Could not connect to server.");
-        }
-      });
+  
+    let currentEmail = "";
+window.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const res = await fetch("https://iconofgod-backend.onrender.com/api/auth/dashboard", {
+      method: "GET",
+      credentials: "include"
     });
+    if (!res.ok) throw new Error("Not authenticated");
+    const data = await res.json();
+
+    currentEmail = data.email;
+    document.getElementById("edit-name").value = data.name;
+    document.getElementById("edit-email").value = data.email;
+  } catch (err) {
+    window.location.href = "Login.html";
+  }
+
+  document.getElementById("edit-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById("edit-name").value.trim();
+    const email = document.getElementById("edit-email").value.trim();
+
+    try {
+      const res = await fetch("https://iconofgod-backend.onrender.com/api/auth/update-profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ currentEmail, name, email }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert("Profile updated!");
+        window.location.href = "Account_Dashboard.html";
+      } else {
+        alert(data.message || "Failed to update.");
+      }
+    } catch (err) {
+      alert("Could not connect to server.");
+    }
+  });
+});
   </script>
 </body>
 </html>
