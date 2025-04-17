@@ -6,7 +6,9 @@ const router = express.Router();
 const sendEmail = require('../utils/sendEmail');
 const verifyToken = require('../middleware/authMiddleware');
 const User = require('../models/User');
-console.log("Current working directory:", __dirname);
+
+const fs = require('fs');
+console.log("🧭 Files in models:", fs.readdirSync(__dirname + '/../models'));
 
 
 router.post('/logout', (req, res) => {
