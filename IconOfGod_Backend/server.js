@@ -12,7 +12,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(cookieParser());
-app.use('/api/verify', require('./_routes/verify'));
+app.use('/api/verify', require('./routes/verify'));
 app.use('/api/auth', authRoutes);
 
 connectDB();
