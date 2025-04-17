@@ -148,7 +148,7 @@ router.post('/request-reset', (req, res) => {
   user.resetToken = token;
   user.tokenExpiry = tokenExpiry;
 
-  const resetLink = `http://localhost:5500/reset_password.html?token=${token}`;
+  const resetLink = `https://iconofgod-backend.onrender.com/reset_password.html?token=${token}`;
   console.log(`Reset link for ${email}: ${resetLink}`);
 
   res.json({ message: 'Reset link sent to your email (mock)', resetLink });
