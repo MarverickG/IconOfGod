@@ -129,8 +129,8 @@ router.post('/change-password', verifyToken, async (req, res) => {
   console.log("USER FROM TOKEN:", req.user);
   console.log("Decoded token user:", req.user);
   console.log("REQ.USER:", req.user);
-  
-  if (!email || !currentPassword || !newPassword) {
+
+  if ( !currentPassword || !newPassword || !confirmPassword ) {
     return res.status(400).json({ message: 'All fields are required' });
   }
   if (newPassword !== confirmPassword) {
