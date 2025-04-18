@@ -68,7 +68,7 @@ router.post('/login', async (req, res) => {
       return res.status(403).json({ message: 'Please verify your email before logging in.' });
     }
     const token = jwt.sign(
-      { id: user._id, name: user.name },
+      { id: user._id, name: user.name, email: user.email },
       process.env.JWT_SECRET,
       { expiresIn: '1d' }
     );
@@ -136,6 +136,10 @@ router.post('/change-password', verifyToken, async (req, res) => {
   if (newPassword !== confirmPassword) {
     return res.status(400).json({ message: 'Passwords do not match' });
   }
+  
+  if (!email) {
+    return res.status(400).json({ message: 'User email missing from token. Please log in again.' });
+  }
   try {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ message: 'User not found.' });
@@ -154,6 +158,7 @@ router.post('/change-password', verifyToken, async (req, res) => {
     await user.save();
 
     res.json({ message: 'Password updated successfully' });
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error' });
