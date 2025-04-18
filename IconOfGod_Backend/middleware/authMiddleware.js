@@ -19,5 +19,6 @@ function verifyToken (req, res, next) {
   } catch (err) {
     return res.status(403).json({ message: 'Token invalid or expired' });
   }
+  console.log("Decoded token user:", decoded);
 }
 module.exports = { verifyToken };

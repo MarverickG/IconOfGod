@@ -122,13 +122,18 @@ router.post('/update-profile', verifyToken, async (req, res) => {
 // Change password
 
 router.post('/change-password', verifyToken, async (req, res) => {
-  const { currentPassword, newPassword } = req.body;
-  const email = req.user.email;
+  const { currentPassword, newPassword, confirmPassword } = req.body;
+  const email = req?.user?.email;
   console.log("BODY:", req.body);
+  console.log("USER FROM TOKEN:", req.user);
+  console.log("Decoded token user:", req.user);
+
   if (!email || !currentPassword || !newPassword) {
     return res.status(400).json({ message: 'All fields are required' });
   }
-
+  if (newPassword !== confirmPassword) {
+    return res.status(400).json({ message: 'Passwords do not match' });
+  }
   try {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ message: 'User not found.' });
