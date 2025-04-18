@@ -124,6 +124,7 @@ router.post('/update-profile', verifyToken, async (req, res) => {
 router.post('/change-password', verifyToken, async (req, res) => {
   const { currentPassword, newPassword } = req.body;
   const email = req.user.email;
+  console.log("BODY:", req.body);
   if (!email || !currentPassword || !newPassword) {
     return res.status(400).json({ message: 'All fields are required' });
   }
