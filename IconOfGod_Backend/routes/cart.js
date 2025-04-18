@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { verifyToken } = require('../middleware/authMiddleware/authenticateUser');
+const { verifyToken } = require('../middleware/authMiddleware');
 const { addToCart, getCart, removeFromCart } = require('../controllers/cartController');
 
 // Secure routes using middleware
