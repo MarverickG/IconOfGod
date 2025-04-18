@@ -54,5 +54,24 @@ exports.removeFromCart = async (req, res) => {
     res.status(200).json(cart);
   } catch (err) {
     res.status(500).json({ error: 'Could not remove item' });
+    // DELETE /api/cart/remove/:itemId
+exports.deleteCartItem = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { itemId } = req.params;
+
+    const cart = await Cart.findOne({ userId });
+    if (!cart) return res.status(404).json({ message: "Cart not found" });
+
+    const filteredItems = cart.items.filter(item => item._id.toString() !== itemId);
+
+    cart.items = filteredItems;
+    await cart.save();
+
+    res.status(200).json({ message: "Item removed successfully", cart });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
   }
 };

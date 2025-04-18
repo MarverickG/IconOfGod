@@ -7,5 +7,5 @@ const { addToCart, getCart, removeFromCart } = require('../controllers/cartContr
 router.get('/', verifyToken, getCart);
 router.post('/add', verifyToken, addToCart);
 router.post('/remove', verifyToken, removeFromCart);
-
+router.delete('/remove/:itemId', authenticateUser, deleteCartItem);
 module.exports = router;
