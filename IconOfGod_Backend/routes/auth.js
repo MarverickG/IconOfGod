@@ -72,15 +72,6 @@ router.post('/login', async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: '1d' }
     );
-    
-    res.status(200).json({
-      message: 'Login successful',
-      token,
-      user: {
-        name: user.name,
-        email: user.email,
-      },
-    });
 
     res.cookie('token', token, {
       httpOnly: true,
@@ -89,7 +80,7 @@ router.post('/login', async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
 
-    res.json({
+    res.status(200).json({
       message: 'Login successful',
       user: {
         name: user.name,
