@@ -10,10 +10,36 @@
   <h2 id="cart-total">Total: $0</h2>
   <button onclick="checkout()">Proceed to Checkout</button>
 
+  <button onclick="addToCart()">Add to Cart</button>
+
   <script>
-    function checkout() {
-      alert("Checkout logic coming soon...");
-      // You can later send this cart data to the backend to create an order
+    async function addToCart() {
+      const token = localStorage.getItem('token'); // get JWT token from localStorage
+  
+      const res = await fetch('https://iconofgod-backend.onrender.com/api/cart/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` // ✅ send token here
+        },
+        body: JSON.stringify({
+          product: {
+            productId: "6802773a9862481aadd027e3",
+            name: "Drop01 Jersey - Divine Black",
+            size: "M",
+            price: 88,
+            quantity: 1
+          }
+        })
+      });
+  
+      const data = await res.json();
+      console.log(data); // Check success/failure
+      if (res.ok) {
+      alert("Added to cart successfully!");
+    } else {
+      alert("Failed to add to cart.");
+    }
     }
   </script>
 </body>

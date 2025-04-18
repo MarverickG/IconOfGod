@@ -82,11 +82,12 @@ router.post('/login', async (req, res) => {
 
     res.json({
       message: 'Login successful',
+      localStorage.setItem('token', res.data.token);
       user: {
         name: user.name,
         email: user.email,
       },
-      token // optional if you're using it client-side
+     
     });
 
   } catch (err) {
@@ -204,7 +205,7 @@ router.post('/request-reset', async (req, res) => {
   `
 });
 
-  console.log(`Reset link for ${email}: ${resetLink}`);
+  console.log(`Reset link for ${em ail}: ${resetLink}`);
   res.json({ message: 'Reset link sent to your email', resetLink });
   }  catch (err) {
     console.error(err);

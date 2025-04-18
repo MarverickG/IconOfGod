@@ -111,18 +111,18 @@
       })
       .then((res) => res.json())
       .then((data) => {
-        if (data.user) {
-          // ✅ This stores the user's name + email for the dashboard
-          localStorage.setItem("iog_user", JSON.stringify(data.user));
-          window.location.href = "Account_Dashboard.html";
-        } else {
-          alert(data.message || "Login failed.");
-        }
-      })
-      .catch((err) => {
-        console.error("Login error:", err);
-        alert("Something went wrong. Please try again.");
-      });
+        if (data.token && data.user) {
+  // ✅ Store token for future requests
+      localStorage.setItem("token", data.token);
+
+  // ✅ Optionally store user info too
+      localStorage.setItem("iog_user", JSON.stringify(data.user));
+
+  // ✅ Redirect
+      window.location.href = "Account_Dashboard.html";
+    } else {
+      alert(data.message || "Login failed.");
+    }
     });
   </script>
 </body>
