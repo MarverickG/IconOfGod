@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 
 const app = express();
 app.use(cors({
-  origin: 'http://localhost:5500', // frontend origin
+  origin: 'https://iconofgod-frontend.onrender.com', // frontend origin
   credentials: true // allow cookies
 }));
 app.use(express.json());
