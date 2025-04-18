@@ -172,11 +172,11 @@ router.post('/request-reset', async (req, res) => {
   try {
   const user = await User.findOne({ email });
   const nodemailer = require('nodemailer');
-
+  
   if (!user) {
     return res.status(404).json({ message: 'No user found with that email.' });
-  }
-
+  }}
+  
   const transporter = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
@@ -184,9 +184,15 @@ router.post('/request-reset', async (req, res) => {
     pass: process.env.EMAIL_PASS
   }
 });
+  const token = crypto.randomBytes(32).toString('hex');
+  const tokenExpiry = Date.now() + 15 * 60 * 1000;
+
+  user.resetToken = token;
+  user.tokenExpiry = tokenExpiry;
+  await user.save();
 
   const resetLink = `https://iconofgod-backend.onrender.com/reset_password.html?token=${token}`;
-  
+
   await transporter.sendMail({
   from: process.env.EMAIL_USER,
   to: email,
@@ -199,23 +205,13 @@ router.post('/request-reset', async (req, res) => {
   `
 });
 
-  const token = crypto.randomBytes(32).toString('hex');
-  const tokenExpiry = Date.now() + 15 * 60 * 1000;
-
-  user.resetToken = token;
-  user.tokenExpiry = tokenExpiry;
-  await user.save();
-
-  
-  
   console.log(`Reset link for ${email}: ${resetLink}`);
-
+  res.json({ message: 'Reset link sent to your email', resetLink });
   }  catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error' });
   }
 });
-res.json({ message: 'Reset link sent to your email', resetLink });
 // Reset password
 router.post('/reset-password', async (req, res) => {
   const { token, newPassword } = req.body;
