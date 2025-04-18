@@ -204,7 +204,7 @@ router.post('/request-reset', async (req, res) => {
   `
 });
 
-  console.log(`Reset link for ${em ail}: ${resetLink}`);
+  console.log(`Reset link for ${email}: ${resetLink}`);
   res.json({ message: 'Reset link sent to your email', resetLink });
   }  catch (err) {
     console.error(err);
