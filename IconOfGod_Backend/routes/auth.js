@@ -10,6 +10,7 @@ const User = require('../models/User');
 const fs = require('fs');
 console.log("🧭 Files in models:", fs.readdirSync(__dirname + '/../models'));
 
+console.log("REQ.USER:", req.user);
 
 router.post('/logout', (req, res) => {
   res.clearCookie('token').json({ message: 'Logged out successfully' });
