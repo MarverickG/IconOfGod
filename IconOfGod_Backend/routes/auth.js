@@ -10,7 +10,6 @@ const User = require('../models/User');
 const fs = require('fs');
 console.log("🧭 Files in models:", fs.readdirSync(__dirname + '/../models'));
 
-console.log("REQ.USER:", req.user);
 
 router.post('/logout', (req, res) => {
   res.clearCookie('token').json({ message: 'Logged out successfully' });
@@ -125,10 +124,12 @@ router.post('/update-profile', verifyToken, async (req, res) => {
 router.post('/change-password', verifyToken, async (req, res) => {
   const { currentPassword, newPassword, confirmPassword } = req.body;
   const email = req?.user?.email;
+
   console.log("BODY:", req.body);
   console.log("USER FROM TOKEN:", req.user);
   console.log("Decoded token user:", req.user);
-
+  console.log("REQ.USER:", req.user);
+  
   if (!email || !currentPassword || !newPassword) {
     return res.status(400).json({ message: 'All fields are required' });
   }
