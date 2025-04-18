@@ -175,14 +175,13 @@ router.post('/request-reset', async (req, res) => {
   
   if (!user) {
     return res.status(404).json({ message: 'No user found with that email.' });
-  }}
-  
+  }
   const transporter = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
-  }
+  },
 });
   const token = crypto.randomBytes(32).toString('hex');
   const tokenExpiry = Date.now() + 15 * 60 * 1000;
@@ -244,6 +243,7 @@ router.post('/reset-password', async (req, res) => {
 router.get('/dashboard', verifyToken, (req, res) => {
   res.json({ message: `Welcome ${req.user.name}` });
 });
+
 // Verify route
 router.get('/verify', async (req, res) => {
   const token = req.query.token;
