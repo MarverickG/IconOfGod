@@ -82,7 +82,6 @@ router.post('/login', async (req, res) => {
 
     res.json({
       message: 'Login successful',
-      localStorage.setItem('token', res.data.token);
       user: {
         name: user.name,
         email: user.email,
