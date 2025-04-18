@@ -17,6 +17,12 @@ app.use('/api/auth', authRoutes);
 
 connectDB();
 
+const devSeed = require('./routes/devSeed');
+app.use('/api/dev', devSeed);
+
+const cartRoutes = require('./routes/cart');
+app.use('/api/cart', cartRoutes);
+
 // ✅ Add this route to prevent "Cannot GET /"
 app.get('/', (req, res) => {
   res.send('API is live and working.');
